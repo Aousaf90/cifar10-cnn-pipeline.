@@ -7,3 +7,5 @@ __pycache__/
 data/_download
 *.log
 push_log.txt
+/models
+/confusion_matrix.png

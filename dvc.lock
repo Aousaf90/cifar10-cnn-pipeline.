@@ -1,0 +1,117 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+    - path: src/data_io.py
+      hash: md5
+      md5: 9f7ba01e47f6d8ae2f31112a8dba7b22
+      size: 683
+    - path: src/prepare.py
+      hash: md5
+      md5: b68f079c5afcc21b040712454b0154cf
+      size: 370
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 8182714ba819d4af86fd7f81e61c91b2.dir
+      size: 184802940
+      nfiles: 6
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 8182714ba819d4af86fd7f81e61c91b2.dir
+      size: 184802940
+      nfiles: 6
+    - path: src/data_io.py
+      hash: md5
+      md5: 9f7ba01e47f6d8ae2f31112a8dba7b22
+      size: 683
+    - path: src/preprocess.py
+      hash: md5
+      md5: cb71a174b599ec06789cd40c4181c57c
+      size: 989
+    params:
+      params.yaml:
+        preprocess.image_size: 32
+        preprocess.seed: 42
+        preprocess.val_size: 0.1
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: fd9c75b2bbba9f06bf6d1ad1d005f197.dir
+      size: 369126370
+      nfiles: 13
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: fd9c75b2bbba9f06bf6d1ad1d005f197.dir
+      size: 369126370
+      nfiles: 13
+    - path: src/data_io.py
+      hash: md5
+      md5: 9f7ba01e47f6d8ae2f31112a8dba7b22
+      size: 683
+    - path: src/models.py
+      hash: md5
+      md5: d2c324ddf4a498f2a7c59b4af12b7267
+      size: 558
+    - path: src/train.py
+      hash: md5
+      md5: b39ac407884a19fe569dda61c468ba46
+      size: 1668
+    params:
+      params.yaml:
+        train:
+          num_filters: 32
+          dropout_rate: 0.3
+          learning_rate: 0.001
+          epochs: 20
+          batch_size: 128
+    outs:
+    - path: models
+      hash: md5
+      md5: 05cd493d9789804e94a77bfa1f496405.dir
+      size: 4291121
+      nfiles: 2
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: fd9c75b2bbba9f06bf6d1ad1d005f197.dir
+      size: 369126370
+      nfiles: 13
+    - path: models/model.pth
+      hash: md5
+      md5: bfbdbaa7ec5df441b4d07b24c5a50d65
+      size: 4289917
+    - path: src/data_io.py
+      hash: md5
+      md5: 9f7ba01e47f6d8ae2f31112a8dba7b22
+      size: 683
+    - path: src/evaluate.py
+      hash: md5
+      md5: f86ac3facab0bf8cb7bc5c343c1aec2e
+      size: 1299
+    - path: src/models.py
+      hash: md5
+      md5: d2c324ddf4a498f2a7c59b4af12b7267
+      size: 558
+    params:
+      params.yaml:
+        train.dropout_rate: 0.3
+        train.num_filters: 32
+    outs:
+    - path: confusion_matrix.png
+      hash: md5
+      md5: 71cf52ced7b8c8fa28a090fdc0b68fa4
+      size: 67104
+    - path: metrics.json
+      hash: md5
+      md5: 955436148f01d6b90200320653e19ce1
+      size: 76
