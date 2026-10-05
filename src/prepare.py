@@ -1,7 +1,8 @@
-import os, numpy as np
+import numpy as np
 from torchvision import datasets
+from data_io import save_split
 
-os.makedirs("data/raw", exist_ok=True)
-for name, train in [("train", True), ("test", False)]:
+# raw train (~154 MB) -> 5 shards of ~31 MB; raw test (~31 MB) -> 1 shard
+for name, train, shards in [("train", True, 5), ("test", False, 1)]:
     ds = datasets.CIFAR10("data/_download", train=train, download=True)
-    np.savez(f"data/raw/{name}.npz", x=ds.data, y=np.array(ds.targets))
+    save_split("data/raw", name, ds.data, np.array(ds.targets), shards)
