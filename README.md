@@ -1,3 +1,3 @@
-# CIFAR-10 CNN Pipeline
+# CIFAR-10 CNN Pipeline (dev)
 
 A classification pipeline using DVC + DagsHub.
