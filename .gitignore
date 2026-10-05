@@ -5,5 +5,5 @@ __pycache__/
 *.h5
 .DS_Store
 data/_download
-logs/
-/models
+*.log
+push_log.txt
